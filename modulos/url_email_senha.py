@@ -21,11 +21,11 @@ def tratar(linhas, termo, diretorio, modulo="url_email_senha"):
 
         # Valida email
         if re.match(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", email):
-            user_list.add(f"{email} (origem: {modulo})")
+            user_list.add(email)
 
         # Valida senha
         if senha and len(senha) <= 16 and all(c.isprintable() for c in senha):
-            pass_list.add(f"{senha} (origem: {modulo})")
+            pass_list.add(senha)
 
     if user_list:
         with open(os.path.join(diretorio, "user_list.txt"), "a", encoding="utf-8") as uf:
@@ -34,3 +34,7 @@ def tratar(linhas, termo, diretorio, modulo="url_email_senha"):
     if pass_list:
         with open(os.path.join(diretorio, "pass_list.txt"), "a", encoding="utf-8") as pf:
             pf.write('\n'.join(sorted(pass_list)) + '\n')
+
+if resultados:
+    with open(os.path.join(diretorio, "result_search.txt"), "a", encoding="utf-8") as rf:
+        rf.write('\n'.join(resultados) + '\n')
