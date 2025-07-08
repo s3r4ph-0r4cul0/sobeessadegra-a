@@ -1,21 +1,24 @@
 import re
 import os
 
-def tratar(linhas, termo, diretorio, modulo="url_email_senha"):
+def tratar(linhas, termo, diretorio, modulo="email_senha"):
     user_list = set()
     pass_list = set()
-    resultados = []  # <== acumula linhas com o termo
+    resultados = []  # <== define a lista para salvar as linhas com o termo
 
     for idx, linha in enumerate(linhas, 1):
         if termo not in linha:
             continue
 
         linha = linha.strip().replace('\r', '')
-        partes = linha.split(':')
-        if len(partes) != 3:
+        if ':' not in linha:
             continue
 
-        url, email, senha = partes
+        partes = linha.split(':')
+        if len(partes) != 2:
+            continue
+
+        email, senha = partes
         email = email.strip()
         senha = senha.strip()
 
@@ -25,7 +28,8 @@ def tratar(linhas, termo, diretorio, modulo="url_email_senha"):
         if senha and len(senha) <= 16 and all(c.isprintable() for c in senha):
             pass_list.add(senha)
 
-        resultados.append(f"{idx}:{linha}")  # salva linha com índice
+        # Salva a linha com índice, útil para debugging
+        resultados.append(f"{idx}:{linha}")
 
     if user_list:
         with open(os.path.join(diretorio, "user_list.txt"), "a", encoding="utf-8") as uf:
